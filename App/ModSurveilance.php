@@ -115,17 +115,19 @@ class ModSurveilance
                     return $deferred->promise();
                 }, $deferreds);
 
-                Promise\all($promises)->then(
-                    function ($configs) {
-                        $mergedConfig = array_reduce($configs, function ($carry, $config) {
-                            return array_replace_recursive($carry, $config);
-                        }, []);
-                        ConfigController::set($mergedConfig);
-                    },
-                    function ($e) {
-                        echo $e->getMessage();
-                    }
-                );
+                if (!empty($promises)) {
+                    Promise\all($promises)->then(
+                        function ($configs) {
+                            $mergedConfig = array_reduce($configs, function ($carry, $config) {
+                                return array_replace_recursive($carry, $config);
+                            }, []);
+                            ConfigController::set($mergedConfig);
+                        },
+                        function ($e) {
+                            echo $e->getMessage();
+                        }
+                    );
+                }
             },
             function ($e) {
                 echo $e->getMessage();
