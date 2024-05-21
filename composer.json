@@ -1,0 +1,18 @@
+{
+    "name": "njen/ark-ascended-mod-surveilance",
+    "description": "Posts to a webhook when mods have an update",
+    "license": "MIT",
+    "autoload": {
+        "psr-4": {
+            "App\\": "App/"
+        }
+    },
+    "authors": [
+        {
+            "name": "Niels Jensen"
+        }
+    ],
+    "require": {
+        "react/http": "^1.10"
+    }
+}
