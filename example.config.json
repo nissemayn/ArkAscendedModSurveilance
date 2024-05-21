@@ -1,0 +1,9 @@
+{
+    "discordWebhook": "",
+    "apiKey": "",
+    "interval": 1800,
+    "mods": {
+        "930403": {},
+        "940786": {}
+    }
+}
