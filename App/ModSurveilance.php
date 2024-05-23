@@ -6,6 +6,7 @@ use App\ConfigController;
 use React\Http\Browser;
 use React\Promise\Deferred;
 use React\Promise;
+use Throwable;
 
 class ModSurveilance
 {
@@ -95,15 +96,15 @@ class ModSurveilance
                                 $client->post($modSurveilce['discordWebhook'], [
                                     'Content-Type' => 'application/json'
                                 ], json_encode($data, JSON_UNESCAPED_SLASHES))->then(
-                                    function ($response) use ($modId, $latestFileId, $deferred) {
+                                    function ($response) use ($modId, $latestFileId, $deferred, $modSurveilce) {
                                         $config = ConfigController::get();
                                         $config['mods'][$modId]['latestFileId'] = $latestFileId;
                                         $deferred->resolve($config);
                                     },
-                                    function ($e) use ($deferred) {
+                                    function ($e) use ($deferred, $modSurveilce) {
                                         echo $e->getMessage() . PHP_EOL;
                                         echo $e->getResponse()->getBody() . PHP_EOL;
-                                        $deferred->reject($e);
+                                        $deferred->resolve($modSurveilce);
                                     }
                                 );
                             },
