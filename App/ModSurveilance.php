@@ -89,7 +89,7 @@ class ModSurveilance
                                             "color" => 2354023,
                                         ],
                                     ],
-                                    "username" => "ArkAscendedModSurveilance",
+                                    "username" => $modSurveilce['discordUsername'],
                                 ];
 
                                 $client = new Browser();

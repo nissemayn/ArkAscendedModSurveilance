@@ -2,6 +2,7 @@
     "discordWebhook": "",
     "apiKey": "",
     "interval": 1800,
+    "discordUsername": "ArkAscendedModSurveilance",
     "mods": {
         "930403": {},
         "940786": {}
