@@ -62,8 +62,7 @@ Here's an example configuration:
         "930403": {},
         "940786": {}
     }
-}
-
+}```
 
 ## Usage
 
