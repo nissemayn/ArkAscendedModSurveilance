@@ -33,6 +33,37 @@ Follow these steps to get the project up and running:
 
 4. Copy the `example.config.json` to `config.json` and make necessary changes according to your setup.
 
+## Configuration
+
+The application is configured using a JSON file named `config.json`. Here's a breakdown of what each field in the configuration file represents:
+
+- `discordWebhook`: This is the URL of the Discord webhook where notifications about mod updates will be sent. You can create a webhook in your Discord server settings.
+
+- `apiKey`: This is your API key for accessing the CurseForge API. You can obtain this key from your CurseForge account settings.
+
+- `interval`: This is the interval (in seconds) at which the application will check for mod updates. For example, an interval of 1800 means the application will check for updates every 30 minutes.
+
+- `discordUsername`: This is the username that will be displayed in Discord when the application sends a notification.
+
+- `consoleTitle`: This is the title that will be displayed in the console when the application is running.
+
+- `mods`: This is an object where each key is the ID of a mod to monitor, and the value is an object that can contain additional configuration for that mod. Adding new mods to monitor is a simple as adding ```"modid":{}``` 
+
+Here's an example configuration:
+
+```json
+{
+    "discordWebhook": "https://discord.com/api/webhooks/1234567890/abcdefgh",
+    "apiKey": "your-api-key",
+    "interval": 1800,
+    "discordUsername": "ArkAscendedModSurveilance",
+    "consoleTitle": "Ark Ascended Mod Surveilance",
+    "mods": {
+        "930403": {},
+        "940786": {}
+    }
+}
+
 
 ## Usage
 
