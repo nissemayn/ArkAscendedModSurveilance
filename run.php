@@ -8,12 +8,13 @@ use App\ModSurveilance;
 
 $modSurveilce = ConfigController::get();
 
+cli_set_process_title($modSurveilce['consoleTitle']);
+
 echo "Monitoring " . count($modSurveilce['mods']) . " mods.." . PHP_EOL;
+echo "Checking every " . $modSurveilce['interval'] . " seconds" . PHP_EOL;
 ModSurveilance::CheckAllMods();
 $loop = Loop::get();
-//Set a timer to check for mod updates every x seconds based on config
 $loop->addPeriodicTimer($modSurveilce['interval'], function () {
-    echo "Checking for mod updates..." . PHP_EOL;
     ModSurveilance::CheckAllMods();
 });
 $loop->run();

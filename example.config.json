@@ -3,6 +3,7 @@
     "apiKey": "",
     "interval": 1800,
     "discordUsername": "ArkAscendedModSurveilance",
+    "consoleTitle": "Ark Ascended Mod Surveilance",
     "mods": {
         "930403": {},
         "940786": {}
