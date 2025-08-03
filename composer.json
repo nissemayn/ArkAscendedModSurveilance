@@ -13,6 +13,7 @@
         }
     ],
     "require": {
-        "react/http": "^1.10"
+        "react/http": "^1.10",
+        "guzzlehttp/guzzle": "^7.9"
     }
 }

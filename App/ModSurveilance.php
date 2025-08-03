@@ -6,7 +6,7 @@ use App\ConfigController;
 use React\Http\Browser;
 use React\Promise\Deferred;
 use React\Promise;
-use Throwable;
+use Exception;
 
 class ModSurveilance
 {
@@ -39,6 +39,7 @@ class ModSurveilance
 
                 $deferreds = [];
                 foreach ($mods as $mod) {
+                    echo "Checking mod: $mod->name" . PHP_EOL;
 
                     $modId = $mod->id;
                     $latestFileId = $mod->latestFiles[0]->id;
@@ -54,6 +55,7 @@ class ModSurveilance
                     }
 
                     if ($changed) {
+                        echo "New update for $mod->name" . PHP_EOL;
                         $deferred = new Deferred();
                         $deferreds[] = $deferred;
                         $client = new Browser();
@@ -90,23 +92,11 @@ class ModSurveilance
                                         ],
                                     ],
                                     "username" => $modSurveilce['discordUsername'],
+                                    "modId" => $modId,
+                                    "latestFileId" => $latestFileId
                                 ];
 
-                                $client = new Browser();
-                                $client->post($modSurveilce['discordWebhook'], [
-                                    'Content-Type' => 'application/json'
-                                ], json_encode($data, JSON_UNESCAPED_SLASHES))->then(
-                                    function ($response) use ($modId, $latestFileId, $deferred, $modSurveilce) {
-                                        $config = ConfigController::get();
-                                        $config['mods'][$modId]['latestFileId'] = $latestFileId;
-                                        $deferred->resolve($config);
-                                    },
-                                    function ($e) use ($deferred, $modSurveilce) {
-                                        echo $e->getMessage() . PHP_EOL;
-                                        echo $e->getResponse()->getBody() . PHP_EOL;
-                                        $deferred->resolve($modSurveilce);
-                                    }
-                                );
+                                $deferred->resolve($data);
                             },
                         );
                     }
@@ -118,11 +108,40 @@ class ModSurveilance
 
                 if (!empty($promises)) {
                     Promise\all($promises)->then(
-                        function ($configs) {
-                            $mergedConfig = array_reduce($configs, function ($carry, $config) {
-                                return array_replace_recursive($carry, $config);
-                            }, []);
-                            ConfigController::set($mergedConfig);
+                        function ($webhookData) use ($modSurveilce) {
+                            $client = new \GuzzleHttp\Client([
+                                'verify' => false
+                            ]);
+                            foreach ($webhookData as $data) {
+                                $modId = $data['modId'];
+                                $latestFileId = $data['latestFileId'];
+
+                                unset($data['modId']);
+                                unset($data['latestFileId']);
+
+                                try {
+                                    $response = $client->post($modSurveilce['discordWebhook'], [
+                                        'headers' => [
+                                            'Content-Type' => 'application/json'
+                                        ],
+                                        'body' => json_encode($data, JSON_UNESCAPED_SLASHES)
+                                    ]);
+                                } catch (Exception $e) {
+                                    echo $e->getMessage() . PHP_EOL;
+                                }
+
+                                sleep(1);
+                            }
+
+                            $config = ConfigController::get();
+                            foreach ($webhookData as $data) {
+                                $modId = $data['modId'];
+                                $latestFileId = $data['latestFileId'];
+                                $config['mods'][$modId] = [
+                                    'latestFileId' => $latestFileId
+                                ];
+                            }
+                            ConfigController::set($config);
                         },
                         function ($e) {
                             echo $e->getMessage();
